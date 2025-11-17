@@ -1,0 +1,53 @@
+[gd_scene load_steps=7 format=3 uid="uid://gp23oysfw8m7"]
+
+[ext_resource type="Script" uid="uid://h2xf7ihrrmbb" path="res://scripts/emotion_mode/emotion_mode_listener.gd" id="1_4v8ox"]
+
+[sub_resource type="Curve" id="Curve_4v8ox"]
+_limits = [0.0, 5.0, 0.0, 1.0]
+_data = [Vector2(0.4557235, 0.17426711), 0.0, 0.0, 0, 0, Vector2(1, 2.9621334), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_rw6px"]
+curve = SubResource("Curve_4v8ox")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7up8o"]
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(0, -512, 0)
+emission_shape_scale = Vector3(1080, 1, 1)
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 1)
+direction = Vector3(0, 1, 0)
+spread = 0.0
+initial_velocity_min = 300.0
+initial_velocity_max = 1000.0
+gravity = Vector3(0, 0, 0)
+scale_min = 2.0
+scale_max = 2.0
+scale_over_velocity_max = 1000.0
+scale_over_velocity_curve = SubResource("CurveTexture_rw6px")
+color = Color(1.0569379, 1.0569379, 1.0569379, 1)
+hue_variation_min = -0.06000002
+hue_variation_max = 0.089999974
+sub_emitter_mode = 1
+sub_emitter_frequency = 60.0
+
+[sub_resource type="Curve" id="Curve_rw6px"]
+_limits = [0.01, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.01), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_lhv3e"]
+curve = SubResource("Curve_rw6px")
+
+[node name="obj_ps_rain" type="GPUParticles2D"]
+amount = 200
+preprocess = 30.0
+trail_lifetime = 0.1
+process_material = SubResource("ParticleProcessMaterial_7up8o")
+
+[node name="emotion_speed_scaler" type="Node" parent="."]
+script = ExtResource("1_4v8ox")
+weight_curve = SubResource("CurveTexture_lhv3e")
+metadata/_custom_type_script = "uid://h2xf7ihrrmbb"
+
+[connection signal="on_mode_weight_changed" from="emotion_speed_scaler" to="." method="set_speed_scale"]

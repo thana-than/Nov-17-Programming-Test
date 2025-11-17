@@ -1,0 +1,229 @@
+[gd_scene load_steps=26 format=3 uid="uid://dy71lcw4rdji8"]
+
+[ext_resource type="PackedScene" uid="uid://gp23oysfw8m7" path="res://objects/obj_ps_rain.tscn" id="1_j5px3"]
+[ext_resource type="Script" uid="uid://p8jj48hyjdsq" path="res://scripts/app_root.gd" id="1_kycxp"]
+[ext_resource type="Script" uid="uid://0w72nime6e6i" path="res://scripts/emotion_mode/emotion_mode_controller.gd" id="2_twpsu"]
+[ext_resource type="PackedScene" uid="uid://rx62opg8jmrd" path="res://objects/obj_character_controller.tscn" id="3_lrqlo"]
+[ext_resource type="PackedScene" uid="uid://wkw2vmbpihsg" path="res://objects/obj_enemy.tscn" id="4_j287u"]
+[ext_resource type="Script" uid="uid://ddexdefanao0p" path="res://scripts/visibility_float.gd" id="4_sqa0i"]
+[ext_resource type="Script" uid="uid://h2xf7ihrrmbb" path="res://scripts/emotion_mode/emotion_mode_listener.gd" id="5_jh1ax"]
+
+[sub_resource type="Environment" id="Environment_lrqlo"]
+background_mode = 3
+background_canvas_max_layer = 10
+glow_enabled = true
+glow_intensity = 4.52
+glow_strength = 0.91
+glow_bloom = 0.39
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sqa0i"]
+size = Vector2(1, 1)
+
+[sub_resource type="Gradient" id="Gradient_sqa0i"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(0.070164286, 0.05704084, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_jh1ax"]
+gradient = SubResource("Gradient_sqa0i")
+width = 1
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lrqlo"]
+size = Vector2(248, 126)
+
+[sub_resource type="Gradient" id="Gradient_jh1ax"]
+colors = PackedColorArray(0.62175584, 0.54665655, 0.92199576, 1, 1.732707e-06, 0.71129376, 0.7943956, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_kycxp"]
+gradient = SubResource("Gradient_jh1ax")
+
+[sub_resource type="Curve" id="Curve_lrqlo"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_sqa0i"]
+curve = SubResource("Curve_lrqlo")
+
+[sub_resource type="Curve" id="Curve_sqa0i"]
+_limits = [0.0, 3.0, 0.0, 1.0]
+_data = [Vector2(0, 0.88802934), 0.0, 0.0, 0, 0, Vector2(1, 3), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_jh1ax"]
+curve = SubResource("Curve_sqa0i")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_jh1ax"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(150, 1, 1)
+direction = Vector3(1, -1, 0)
+initial_velocity_max = 111.78
+gravity = Vector3(0, -250, 0)
+radial_accel_min = 50.299995
+radial_accel_max = 50.299995
+damping_min = 71.857
+damping_max = 95.41
+scale_min = 4.99
+scale_max = 4.99
+scale_curve = SubResource("CurveTexture_sqa0i")
+scale_over_velocity_max = 344.97998
+scale_over_velocity_curve = SubResource("CurveTexture_jh1ax")
+color_ramp = SubResource("GradientTexture1D_kycxp")
+turbulence_enabled = true
+
+[sub_resource type="Gradient" id="Gradient_lrqlo"]
+colors = PackedColorArray(0.44308946, 0.10985229, 0.013124871, 1, 0.32101697, 1.3837591e-07, 0.13845053, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_sqa0i"]
+gradient = SubResource("Gradient_lrqlo")
+fill_from = Vector2(1, 1)
+
+[sub_resource type="Gradient" id="Gradient_kycxp"]
+colors = PackedColorArray(0.492171, 0.25096163, 0.5964828, 1, 0.3064998, 0.45972323, 0.8341262, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_lrqlo"]
+gradient = SubResource("Gradient_kycxp")
+fill_from = Vector2(1, 1)
+
+[sub_resource type="Curve" id="Curve_kycxp"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_j287u"]
+curve = SubResource("Curve_kycxp")
+
+[node name="Root" type="Node2D"]
+script = ExtResource("1_kycxp")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_lrqlo")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="obj_ps_rain" parent="Camera2D" instance=ExtResource("1_j5px3")]
+
+[node name="PlayerCharacter" parent="." instance=ExtResource("3_lrqlo")]
+position = Vector2(-241, 194)
+
+[node name="Enemy" parent="." instance=ExtResource("4_j287u")]
+position = Vector2(-247, -72)
+
+[node name="Staging" type="Node2D" parent="."]
+position = Vector2(111, 528)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Staging"]
+position = Vector2(-335, -66)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Staging/StaticBody2D"]
+scale = Vector2(600, 461)
+shape = SubResource("RectangleShape2D_sqa0i")
+
+[node name="Sprite2D" type="Sprite2D" parent="Staging/StaticBody2D/CollisionShape2D"]
+texture = SubResource("GradientTexture1D_jh1ax")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Staging"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Staging/StaticBody2D3"]
+scale = Vector2(600, 461)
+shape = SubResource("RectangleShape2D_sqa0i")
+
+[node name="Sprite2D" type="Sprite2D" parent="Staging/StaticBody2D3/CollisionShape2D"]
+texture = SubResource("GradientTexture1D_jh1ax")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="Staging"]
+position = Vector2(209, -431)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Staging/StaticBody2D4"]
+scale = Vector2(300, 50)
+shape = SubResource("RectangleShape2D_sqa0i")
+
+[node name="Sprite2D" type="Sprite2D" parent="Staging/StaticBody2D4/CollisionShape2D"]
+texture = SubResource("GradientTexture1D_jh1ax")
+
+[node name="StaticBody2D6" type="StaticBody2D" parent="Staging"]
+position = Vector2(-339, -655)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Staging/StaticBody2D6"]
+position = Vector2(-23, -20)
+scale = Vector2(300, 50)
+shape = SubResource("RectangleShape2D_sqa0i")
+
+[node name="Sprite2D" type="Sprite2D" parent="Staging/StaticBody2D6/CollisionShape2D"]
+texture = SubResource("GradientTexture1D_jh1ax")
+
+[node name="StaticBody2D5" type="StaticBody2D" parent="Staging"]
+position = Vector2(-358, -545)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Staging/StaticBody2D5"]
+scale = Vector2(500, 50)
+shape = SubResource("RectangleShape2D_sqa0i")
+
+[node name="Sprite2D" type="Sprite2D" parent="Staging/StaticBody2D5/CollisionShape2D"]
+texture = SubResource("GradientTexture1D_jh1ax")
+
+[node name="Emotion Platform" type="StaticBody2D" parent="Staging"]
+position = Vector2(174, -690)
+
+[node name="Emotion_Trigger" type="Area2D" parent="Staging/Emotion Platform"]
+position = Vector2(0, -22)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Staging/Emotion Platform/Emotion_Trigger"]
+position = Vector2(0, -68)
+shape = SubResource("RectangleShape2D_lrqlo")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Staging/Emotion Platform/Emotion_Trigger"]
+amount = 100
+trail_enabled = true
+process_material = SubResource("ParticleProcessMaterial_jh1ax")
+
+[node name="EmotionModeController" type="Node" parent="Staging/Emotion Platform/Emotion_Trigger"]
+script = ExtResource("2_twpsu")
+metadata/_custom_type_script = "uid://0w72nime6e6i"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Staging/Emotion Platform"]
+scale = Vector2(300, 50)
+shape = SubResource("RectangleShape2D_sqa0i")
+
+[node name="Sprite2D" type="Sprite2D" parent="Staging/Emotion Platform/CollisionShape2D"]
+texture = SubResource("GradientTexture1D_jh1ax")
+
+[node name="Screenspace" type="CanvasLayer" parent="."]
+layer = -100
+
+[node name="Background" type="Control" parent="Screenspace"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="mode_off_bg" type="TextureRect" parent="Screenspace/Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_sqa0i")
+
+[node name="mode_on_fg" type="TextureRect" parent="Screenspace/Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_lrqlo")
+script = ExtResource("4_sqa0i")
+alpha = 0.0
+
+[node name="EmotionModeListener" type="Node" parent="Screenspace/Background/mode_on_fg"]
+script = ExtResource("5_jh1ax")
+weight_curve = SubResource("CurveTexture_j287u")
+metadata/_custom_type_script = "uid://h2xf7ihrrmbb"
+
+[connection signal="body_entered" from="Staging/Emotion Platform/Emotion_Trigger" to="Staging/Emotion Platform/Emotion_Trigger/EmotionModeController" method="set_mode_on" unbinds=1]
+[connection signal="body_exited" from="Staging/Emotion Platform/Emotion_Trigger" to="Staging/Emotion Platform/Emotion_Trigger/EmotionModeController" method="set_mode_off" unbinds=1]
+[connection signal="on_mode_weight_changed" from="Screenspace/Background/mode_on_fg/EmotionModeListener" to="Screenspace/Background/mode_on_fg" method="set_alpha"]

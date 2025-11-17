@@ -1,0 +1,75 @@
+[gd_scene load_steps=6 format=3 uid="uid://wkw2vmbpihsg"]
+
+[ext_resource type="Script" uid="uid://wmobses21kua" path="res://scripts/enemy.gd" id="1_htpd4"]
+[ext_resource type="Script" uid="uid://ma3dl46upuub" path="res://scripts/gradient_sample_signaller.gd" id="2_dbipy"]
+[ext_resource type="Script" uid="uid://6yq5t2sf7r2q" path="res://scripts/multi_raycasts.gd" id="3_h8514"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kycxp"]
+radius = 30.0
+height = 60.0
+
+[sub_resource type="Gradient" id="Gradient_7pvxh"]
+colors = PackedColorArray(1, 0.49803922, 0, 1, 1, 0, 0, 1)
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_mask = 3
+script = ExtResource("1_htpd4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_kycxp")
+
+[node name="AttackStateColorizer" type="Node" parent="."]
+script = ExtResource("2_dbipy")
+evaluateGradient = SubResource("Gradient_7pvxh")
+metadata/_custom_type_script = "uid://ma3dl46upuub"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.49803922, 0, 1)
+
+[node name="EdgeDetection" type="RayCast2D" parent="."]
+position = Vector2(50, 0)
+
+[node name="Head" type="Node2D" parent="."]
+
+[node name="ColorRect2" type="ColorRect" parent="Head"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 23.1
+offset_top = -19.715
+offset_right = 53.099968
+offset_bottom = 10.285
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+color = Color(1, 0.49803922, 0, 1)
+
+[node name="TargetDetection" type="Node2D" parent="Head"]
+script = ExtResource("3_h8514")
+
+[node name="RayCast2D" type="RayCast2D" parent="Head/TargetDetection"]
+target_position = Vector2(300, 0)
+collision_mask = 2
+
+[node name="RayCast2D2" type="RayCast2D" parent="Head/TargetDetection"]
+rotation = -0.2617994
+scale = Vector2(0.9999999, 0.9999999)
+target_position = Vector2(300, 0)
+collision_mask = 2
+
+[connection signal="on_attack_weight_changed" from="." to="AttackStateColorizer" method="sample"]
+[connection signal="on_sample" from="AttackStateColorizer" to="ColorRect" method="set_color"]
+[connection signal="on_sample" from="AttackStateColorizer" to="Head/ColorRect2" method="set_color"]
